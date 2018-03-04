@@ -1,31 +1,19 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const http = require('http');
 const app = express();
-
-// API file for interacting with MariaDB
-const api = require('./server/routes/api');
-
-// Parsers
+const bodyParser = require('body-parser');
+ 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
-
-// Angular DIST output folder
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// API location
-app.use('/api', api);
-
-// Send all other requests to the Angular app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+ 
+ 
+// default route
+app.get('/', function (req, res) {
+    return res.send({ error: true, message: 'hello' })
 });
-
-//Set Port
-const port = process.env.PORT || '3000';
-app.set('port', port);
-
-const server = http.createServer(app);
-
-server.listen(port, () => console.log(`Running on localhost:${port}`));
+ 
+// port must be set to 8080 because incoming http requests are routed from port 80 to port 8080
+app.listen(8080, function () {
+    console.log('Node app is running on port 8080');
+});
